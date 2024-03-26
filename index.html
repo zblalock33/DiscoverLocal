@@ -14,13 +14,8 @@
                 require([
                     "esri/config",
                     "esri/Map",
-                    "esri/views/MapView",
-                    "esri/Graphic",
-                    "esri/layers/GraphicsLayer",
-                    "esri/geometry/Circle",
-                    "esri/layers/FeatureLayer"
-                ], function (esriConfig, Map, MapView, Graphic, GraphicsLayer, Circle, FeatureLayer) {
-                    // Use the API key from the config.json file
+                    "esri/views/MapView"
+                ], function (esriConfig, Map, MapView) {
                     esriConfig.apiKey = config.API;
                     
                     const map = new Map({
