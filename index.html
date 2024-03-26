@@ -8,28 +8,37 @@
     <script src="https://js.arcgis.com/4.25/"></script>
 
     <script>
-        fetch('config.json')
-            .then(response => response.json())
-            .then(config => {
-                require([
-                    "esri/config",
-                    "esri/Map",
-                    "esri/views/MapView"
-                ], function (esriConfig, Map, MapView) {
-                    esriConfig.apiKey = config.API;
-                    
-                    const map = new Map({
-                        basemap: "gray"
-                    });
-                    const view = new MapView({
-                        container: "viewDiv",
-                        map: map,
-                        center: [-98.5795, 39.8283],
-                        zoom: 3
-                    });
-                });
-            })
-            .catch(error => console.error('Error loading the config.json file:', error));
+        require([
+            "esri/config",
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/widgets/Search"
+        ], function (esriConfig, Map, MapView, Search) {
+            // Directly set your API key here
+            esriConfig.apiKey = "AAPK35e8e98d277843dfa2ecdb1ac5596534DUB-IUl6Q31xNVu54SYAcGis0XVil_5jLFCe1-ROFe_wjMpb0UxI4IkOSh_Cgjl3E";
+            
+            const map = new Map({
+                basemap: "gray"
+            });
+            const view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-98.5795, 39.8283],
+                zoom: 3
+            });
+
+            // Create the Search widget and add it to the top right corner of the view
+            const search = new Search({
+                view: view
+            });
+            view.ui.add(search, "top-right");
+
+            // Optional: Listen for the select-result event to do something when a search result is clicked
+            search.on("select-result", function(event){
+                console.log("Selected result:", event);
+                // You can add additional logic here to handle the selected search result
+            });
+        });
     </script>
 
     <style>
