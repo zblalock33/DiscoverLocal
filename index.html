@@ -115,8 +115,10 @@
               container: "viewDiv", // Reference to the DOM node that will contain the view
               map: map, // References the map object
               center: [-98.5795, 39.8283], // Longitude, Latitude for the geographic center of the US
-              zoom: 3 // Zoom level to see the whole of the US at start
-              
+              zoom: 3 ,// Zoom level to see the whole of the US at start
+              ui: {
+                components: ["attribution"]
+              }
         });
 
         const locateBtn= new Locate({
