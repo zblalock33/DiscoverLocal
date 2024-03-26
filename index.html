@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Basic Map</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.25/"></script>
+    <script>
+      require([
+    "esri/config",
+    "esri/Map",
+    "esri/views/MapView"
+], function (esriConfig, Map, MapView) {
+    esriConfig.apiKey = "YOUR_API_KEY_HERE"; // Replace YOUR_API_KEY_HERE with your actual API key
+    const map = new Map({
+        basemap: "gray"
+    });
+    const view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-98.5795, 39.8283],
+        zoom: 3
+    });
+});
+    </script>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewDiv"></div>
+</body>
+</html>
