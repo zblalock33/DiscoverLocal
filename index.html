@@ -6,24 +6,37 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.25/"></script>
+
     <script>
-      require([
-    "esri/config",
-    "esri/Map",
-    "esri/views/MapView"
-], function (esriConfig, Map, MapView) {
-    esriConfig.apiKey = "YOUR_API_KEY_HERE"; // Replace YOUR_API_KEY_HERE with your actual API key
-    const map = new Map({
-        basemap: "gray"
-    });
-    const view = new MapView({
-        container: "viewDiv",
-        map: map,
-        center: [-98.5795, 39.8283],
-        zoom: 3
-    });
-});
+        fetch('config.json')
+            .then(response => response.json())
+            .then(config => {
+                require([
+                    "esri/config",
+                    "esri/Map",
+                    "esri/views/MapView",
+                    "esri/Graphic",
+                    "esri/layers/GraphicsLayer",
+                    "esri/geometry/Circle",
+                    "esri/layers/FeatureLayer"
+                ], function (esriConfig, Map, MapView, Graphic, GraphicsLayer, Circle, FeatureLayer) {
+                    // Use the API key from the config.json file
+                    esriConfig.apiKey = config.API;
+                    
+                    const map = new Map({
+                        basemap: "gray"
+                    });
+                    const view = new MapView({
+                        container: "viewDiv",
+                        map: map,
+                        center: [-98.5795, 39.8283],
+                        zoom: 3
+                    });
+                });
+            })
+            .catch(error => console.error('Error loading the config.json file:', error));
     </script>
+
     <style>
         html, body, #viewDiv {
             padding: 0;
