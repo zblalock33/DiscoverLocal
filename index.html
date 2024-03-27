@@ -181,6 +181,7 @@
             resultGraphicEnabled: true,
             autoSelect: true
         });
+        searchWidget.container = document.getElementById("searchWidgetDiv");
 
         document.getElementById('actionSelect').addEventListener('change', function() {
             var action = this.value;
@@ -194,33 +195,43 @@
         });
 
         document.getElementById('searchButton').addEventListener('click', function() {
-          var venueName = document.getElementById('venueNameInput').value.trim();
-          var venueType = document.getElementById('venueTypeInput').value.trim();
-          performSearch(venueName, venueType);
-        });
+  var venueName = document.getElementById('venueNameInput').value.trim();
+  var venueType = document.getElementById('venueTypeInput').value.trim();
+  performSearch(venueName, venueType);
+});
 
-        function performSearch(venueName, venueType) {
-          var query = layer.createQuery();
-          var whereClause = [];
+function performSearch(venueName, venueType) {
+  var query = layer.createQuery();
+  var whereClause = [];
 
-          if (venueName) {
-            whereClause.push("venue_name LIKE '%" + venueName + "%'");
-          }
-          if (venueType) {
-            whereClause.push("venue_type = '" + venueType + "'");
-          }
+  // Ensure the field names used here match the actual field names in your Survey123 dataset
+  if (venueName) {
+    whereClause.push("venue_name LIKE '%" + venueName.replace(/'/g, "''") + "%'"); // Replace 'Name_of_the_venue_field_in_your_dataset' with the actual field name
+  }
+  if (venueType) {
+    whereClause.push("venue_type = '" + venueType.replace(/'/g, "''") + "'"); // Replace 'Name_of_the_venue_type_field_in_your_dataset' with the actual field name
+  }
 
-          query.where = whereClause.join(' AND ');
-          query.returnGeometry = true;
-          query.outFields = ["*"];
+  query.where = whereClause.join(' AND ');
+  query.returnGeometry = true;
+  query.outFields = ["*"]; // List specific fields if you don't need all of them
 
-          layer.queryFeatures(query).then(function(results) {
-            console.log(results);
-            // Process and display the results as needed
-          }).catch(function(error) {
-            console.error("Search failed: ", error);
-          });
-        }
+  layer.queryFeatures(query).then(function(results) {
+    // Handle the query results
+    if (results.features.length > 0) {
+      // Display the results on the map
+      view.goTo(results.features.map(function(feature) {
+        return feature.geometry;
+      }));
+      // Optionally, you can display the results in a list or table
+    } else {
+      console.log("No results found.");
+      // Inform the user that no results were found
+    }
+  }).catch(function(error) {
+    console.error("Search failed: ", error);
+  });
+}
     });
   </script>
 </body>
