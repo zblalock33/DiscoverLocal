@@ -13,19 +13,7 @@
       width: 100%;
     }
 
-    .app-title {
-      position: fixed;
-      z-index: 10;
-      top: 0;
-      left: 0;
-      width: 100%;
-      color: #FFFFFF;
-      background-color: #8B0000;
-      padding: 8px 0;
-      font-size: 18px;
-      text-align: center;
-      box-sizing: border-box;
-    }
+  
 
     .action-select {
       position: fixed;
@@ -78,8 +66,8 @@
     <header class="app-title">DiscoverLocal</header>
     <select class="action-select" id="actionSelect">
       <option value="">Options</option>
-      <option value="addRecord">Add Venue</option>
-      <option value="toggleSearch">Search</option>
+      <option value="addRecord">Add Location</option>
+      <option value="toggleSearch">Toggle Search</option>
     </select>
     <div id="searchWidgetDiv"></div>
     <input type="text" id="venueNameInput" placeholder="Venue Name" />
@@ -104,8 +92,7 @@
       "esri/widgets/Locate", 
       "esri/widgets/Search",
       "esri/layers/FeatureLayer",
-      "esri/tasks/Locator"
-    ], function(esriConfig, Map, MapView, Locate, Search, FeatureLayer) {
+    ], function(esriConfig, Map, MapView, Locate, Search, FeatureLayer, Graphic, SimpleMarkerSymbol, SimpleRenderer) {
 
 
         esriConfig.apiKey = "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU";
@@ -156,7 +143,7 @@
             },
             {
               type: "text",
-              text: "<a href='https://arcg.is/1XnO550' target='_blank'>Leave a Review and Rating!</a>"
+              text: "<a href='https://arcg.is/1XnO550' target='_blank'>Take the Survey</a>"
             }
           ]
         };
@@ -176,36 +163,24 @@
 
    // Configure the Search widget to use the feature layer as its source
    const searchWidget = new Search({
-  view: view,
-  sources: [
-    {
-      // Your custom venue search source
-      layer: layer,
-      searchFields: ["venue_name", "venue_type"],
-      displayField: "venue_name",
-      exactMatch: false,
-      outFields: ["*"],
-      name: "Venues",
-      placeholder: "Search for a venue",
-      popupTemplate: popupTemplate
-    },
-    {
-      // Default search source for normal location searches
-      locator: new Locator({ url: "//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer" }),
-      singleLineFieldName: "SingleLine",
-      name: "Global Search",
-      placeholder: "Search for an address or place",
-      maxResults: 3,
-      maxSuggestions: 6,
-      suggestionsEnabled: true,
-      minSuggestCharacters: 0
-    }
-  ],
-  includeDefaultSources: false
-});
-
-           // Attach the search widget to its container
-        searchWidget.container = document.getElementById("searchWidgetDiv");
+            view: view,
+            sources: [
+              {
+                layer: layer,
+                searchFields: ["venue_name", "venue_type", "untitled_question_9_other"], // Specify the fields to search in
+                displayField: "venue_name", // Specify the field name to display in the search results
+                exactMatch: false,
+                outFields: ["*"],
+                name: "Local Venues",
+                placeholder: "Search for a venue",
+                popupTemplate: popupTemplate // Use the custom popup template
+              }
+            ],
+            popupEnabled: true,
+            popupOpenOnSelect: true,
+            resultGraphicEnabled: true,
+            autoSelect: true
+        });
 
         document.getElementById('actionSelect').addEventListener('change', function() {
             var action = this.value;
