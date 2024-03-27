@@ -1,84 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Discover Local</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
   <style>
     html, body, #viewDiv {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
     }
 
     .app-title {
-        position: fixed;
-        z-index: 10;
-        top: 0;
-        left: 0;
-        width: 100%;
-        color: #FFFFFF;
-        background-color: #8B0000;
-        padding: 8px 0;
-        font-size: 18px;
-        text-align: center;
-        box-sizing: border-box;
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      width: 100%;
+      color: #FFFFFF;
+      background-color: #8B0000;
+      padding: 8px 0;
+      font-size: 18px;
+      text-align: center;
+      box-sizing: border-box;
     }
 
     .action-select {
-        position: fixed;
-        z-index: 10;
-        top: 10px;
-        right: 10px;
-        background-color: #8B0000;
-        color: white;
-        padding: 8px 16px;
-        border: white;
-        border-radius: 4px;
-        font-size: 14px;
-        cursor: pointer;
-        text-decoration: none;
-        box-sizing: border-box;
+      position: fixed;
+      z-index: 10;
+      top: 10px;
+      right: 10px;
+      background-color: #8B0000;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      box-sizing: border-box;
     }
 
     .action-select:hover {
-        background-color: #640000;
+      background-color: #640000;
     }
 
     #searchWidgetDiv {
-        display: none;
-        position: fixed;
-        z-index: 10;
-        top: 60px;
-        left: 0;
-        right: 0;
-        padding: 0 10px;
-        box-sizing: border-box;
+      display: none;
+      position: fixed;
+      z-index: 10;
+      top: 60px;
+      left: 0;
+      right: 0;
+      padding: 0 10px;
+      box-sizing: border-box;
     }
 
     .embed-container {
-        position: relative;
-        height: 0;
-        padding-bottom: 80%;
-        max-width: 100%;
+      position: relative;
+      padding-bottom: 80%;
+      height: 0;
+      max-width: 100%;
     }
-    .embed-container iframe, .embed-container object, .embed-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+
+    .embed-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
+
     small {
-        position: absolute;
-        z-index: 40;
-        bottom: 0;
-        margin-bottom: -15px;
+      position: absolute;
+      z-index: 40;
+      bottom: 0;
+      margin-bottom: -15px;
     }
   </style>
-  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
-  <script src="https://js.arcgis.com/4.29/"></script>
+</head>
+<body>
+  <header class="app-title">DiscoverLocal</header>
+  <select class="action-select" id="actionSelect">
+    <option value="">Options</option>
+    <option value="addRecord">Add Location</option>
+    <option value="toggleSearch">Toggle Search</option>
+  </select>
+  <div id="searchWidgetDiv" style="display:block;">
+    <input type="text" id="venueTypeInput" placeholder="Enter venue type..." />
+    <input type="text" id="venueLocationInput" placeholder="Enter location..." />
+    <button id="searchButton">Search</button>
+
+</div>
+
+
+
+  <div id="viewDiv"></div>
+  <div class="embed-container" id="surveyContainer" style="display:none;">
+    <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="DiscoverLocal" src="https://survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
+  </div>
+  <script src="https://js.arcgis.com/4.29/"> </script>
   <script>
     require([
       "esri/config", 
@@ -87,9 +109,6 @@
       "esri/widgets/Locate", 
       "esri/widgets/Search",
       "esri/layers/FeatureLayer",
-      "esri/Graphic",
-      "esri/renderers/SimpleRenderer", // Add SimpleRenderer module
-      "esri/symbols/SimpleMarkerSymbol", // Add SimpleMarkerSymbol module
     ], function(esriConfig, Map, MapView, Locate, Search, FeatureLayer, Graphic, SimpleMarkerSymbol, SimpleRenderer) {
 
 
@@ -113,22 +132,9 @@
             view : view
         });
 
-      // Define a black diamond symbol
-  const defaultSymbol = new SimpleMarkerSymbol({
-    color: "black",
-    size: "12px",
-    style: "circle"
-  });
-
-  // Create a renderer for the feature layer using the black diamond symbol
-  const renderer = new SimpleRenderer({
-    symbol: defaultSymbol
-  });
-
   // Apply the renderer to the feature layer
   const layer = new FeatureLayer({
-    url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer/0",
-    renderer: renderer // Set the renderer here
+    url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
   });
 
         map.add(layer);
@@ -146,35 +152,37 @@
             autoSelect: true
         });
 
+  document.getElementById('actionSelect').addEventListener('change', function() {
+            var action = this.value;
+            if (action === 'toggleSearch') {
+                var searchWidgetDiv = document.getElementById('searchWidgetDiv');
+                searchWidgetDiv.style.display = searchWidgetDiv.style.display === 'none' ? 'block' : 'none';
+            } else if (action === 'addRecord') {
+                var surveyContainer = document.getElementById('surveyContainer');
+                surveyContainer.style.display = surveyContainer.style.display === 'none' ? 'block' : 'none';
+            }
+        });
 
-  });
+        document.getElementById('searchButton').addEventListener('click', function() {
+          var venueType = document.getElementById('venueTypeInput').value;
+          var venueLocation = document.getElementById('venueLocationInput').value;
+          performSearch(venueType, venueLocation);
+        });
 
-  </script>
-</head>
+        function performSearch(venueType, venueLocation) {
+          var query = layer.createQuery();
+          query.where = "venue_type = '" + venueType + "' AND add_venue_location LIKE '%" + venueLocation + "%'";
+          query.returnGeometry = true;
+          query.outFields = ["*"];
 
-<body>
-    <header class="app-title">DiscoverLocal</header>
-    <select class="action-select" id="actionSelect">
-        <option value="">Options</option>
-        <option value="addRecord">Add Location</option>
-        <option value="toggleSearch">Toggle Search</option>
-    </select>
-    <div id="searchWidgetDiv"></div>
-    <div id="viewDiv"></div>
-    <div class="embed-container" id="surveyContainer" style="display:none;">
-      <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="DiscoverLocal" src="https://survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
-    </div>
-    <script>
-      document.getElementById('actionSelect').addEventListener('change', function() {
-          var action = this.value;
-          if (action === 'toggleSearch') {
-              var searchWidgetDiv = document.getElementById('searchWidgetDiv');
-              searchWidgetDiv.style.display = searchWidgetDiv.style.display === 'none' ? 'block' : 'none';
-          } else if (action === 'addRecord') {
-              var surveyContainer = document.getElementById('surveyContainer');
-              surveyContainer.style.display = surveyContainer.style.display === 'none' ? 'block' : 'none';
-          }
-      });
+          layer.queryFeatures(query).then(function(results) {
+            console.log(results);
+            // Here you can process and display the results, e.g., by highlighting them on the map
+          }).catch(function(error) {
+            console.error("Search failed: ", error);
+          });
+        }
+    });
     </script>
 </body>
 </html>
