@@ -1,12 +1,11 @@
 
 
-
 {
-
-"API" : "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU",
+    
+    "API" : "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU",
 
 "SURVEYID" : "survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" ,
 
-"SURVEY FEATURE LAYER" : "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_f5771cd2163841a5b600403e6c2f0744_results/FeatureServer.is/08z9Lr"
+"Feature Layer" : "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer,
 
 }

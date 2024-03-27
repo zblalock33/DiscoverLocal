@@ -101,6 +101,16 @@
               }
         });
 
+          // Define and initialize the Search widget
+          var locationSearchWidget = new Search({
+          view: view
+        });
+
+        // Define and initialize the FeatureLayer (assuming you have a valid URL for the FeatureLayer)
+        var layer = new FeatureLayer({
+          url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer" // Replace with your Feature Layer URL
+        });
+
         let currentWidget = ''; // Track the current widget
 
         document.getElementById('actionSelect').addEventListener('change', function(event) {
