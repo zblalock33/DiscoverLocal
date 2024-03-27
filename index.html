@@ -18,25 +18,24 @@
     }
 
     .app-title {
-        position: fixed; /* Changed to fixed for better mobile experience */
+        position: fixed;
         z-index: 10;
-        top: 0; /* Align to the top */
-        left: 0; /* Align to the left */
-        width: 100%; /* Full width */
+        top: 0;
+        left: 0;
+        width: 100%;
         color: #FFFFFF;
         background-color: #8B0000;
-        padding: 8px 0; /* Adjusted padding for uniform spacing */
-        border-radius: 0; /* Removed border-radius for full-width header */
+        padding: 8px 0;
         font-size: 18px;
         text-align: center;
-        box-sizing: border-box; /* Include padding in width calculation */
+        box-sizing: border-box;
     }
 
     .addRecordBtn,
     .toggle-search-btn {
-        position: fixed; /* Changed to fixed for better mobile experience */
+        position: fixed;
         z-index: 10;
-        bottom: 10px; /* Align to the bottom for easy thumb access */
+        bottom: 10px;
         background-color: #8B0000;
         color: white;
         padding: 8px 16px;
@@ -45,15 +44,15 @@
         font-size: 14px;
         cursor: pointer;
         text-decoration: none;
-        box-sizing: border-box; /* Include padding in width calculation */
+        box-sizing: border-box;
     }
 
     .addRecordBtn {
-        right: 10px; /* Align to the right */
+        right: 10px;
     }
 
     .toggle-search-btn {
-        left: 10px; /* Align to the left */
+        left: 10px;
     }
 
     .addRecordBtn:hover,
@@ -63,13 +62,13 @@
 
     #searchWidgetDiv {
         display: none;
-        position: fixed; /* Changed to fixed for better mobile experience */
+        position: fixed;
         z-index: 10;
-        top: 60px; /* Adjusted to be below the title */
-        left: 0; /* Full width alignment */
-        right: 0; /* Full width alignment */
-        padding: 0 10px; /* Padding for some space on the sides */
-        box-sizing: border-box; /* Include padding in width calculation */
+        top: 60px;
+        left: 0;
+        right: 0;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
 
     .esri-search .esri-search__container {
@@ -86,6 +85,26 @@
         color: black !important;
     }
 
+    /* Embed Survey123 form styles */
+    .embed-container {
+        position: relative;
+        height: 0;
+        padding-bottom: 80%;
+        max-width: 100%;
+    }
+    .embed-container iframe, .embed-container object, .embed-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    small {
+        position: absolute;
+        z-index: 40;
+        bottom: 0;
+        margin-bottom: -15px;
+    }
   </style>
 
   <!--importing the css and libraries for esri.js-->
@@ -103,19 +122,17 @@
     "esri/layers/FeatureLayer"
   ], (esriConfig, Map, MapView, Locate, Search, FeatureLayer) => {
 
-        //adding in API Key
-        esriConfig.apiKey = "AAPK00ddc6c61269498ab49a78dd3e1855c401j7v7tHZGdSr9EqleiMNXbGGQ4FhL4bjHBddV3SIP3kptKOVGSgowuEJkPRVfUT";
+        esriConfig.apiKey = "YAAPK35e8e98d277843dfa2ecdb1ac5596534DUB-IUl6Q31xNVu54SYAcGis0XVil_5jLFCe1-ROFe_wjMpb0UxI4IkOSh_Cgjl3";
 
         const map = new Map({
               basemap: "satellite"
         });
 
-        // Set the initial center and zoom level
         const view = new MapView({
-              container: "viewDiv", // Reference to the DOM node that will contain the view
-              map: map, // References the map object
-              center: [-98.5795, 39.8283], // Longitude, Latitude for the geographic center of the US
-              zoom: 3 ,// Zoom level to see the whole of the US at start
+              container: "viewDiv",
+              map: map,
+              center: [-98.5795, 39.8283],
+              zoom: 3,
               ui: {
                 components: ["attribution"]
               }
@@ -125,28 +142,23 @@
             view : view
         });
 
-        //Create Feature Layer from feature service
         const layer= new FeatureLayer({
-            //URL to the service
-            url: "" // My URL to Survey123
+            url: "https://https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_f5771cd2163841a5b600403e6c2f0744_results/FeatureServer.is/08z9Lr"
         });
 
-        //Add the locate widget to the top left corner of the view
         view.ui.add (locateBtn, {
             position: "top-left"
         });
 
-        // Create the Search widget and configure its parameters
         const searchWidget = new Search({
             view: view,
-            container: "searchWidgetDiv", // Specify the container for the search widget
+            container: "searchWidgetDiv",
             popupEnabled: true,
             popupOpenOnSelect: true,
             resultGraphicEnabled: true,
             autoSelect: true
         });
 
-        // Adding the survey123 layer to the map
         map.add(layer);
 
   });
@@ -155,21 +167,47 @@
 </head>
 
 <body>
-  <header class="app-title">DiscoverLocal </header>
-  <a href="https://arcg.is/1bKCra0" target="_blank" class="addRecordBtn">Add Record</a>
-  <button id="toggleSearch" class="toggle-search-btn">Search</button>
-  <div id="searchWidgetDiv"></div> <!-- Container for the search widget -->
-  <div id="viewDiv"></div>
-
-  <script>
-    document.getElementById('toggleSearch').addEventListener('click', function() {
-        var searchWidgetDiv = document.getElementById('searchWidgetDiv');
-        if (searchWidgetDiv.style.display === 'none') {
-            searchWidgetDiv.style.display = 'block';
-        } else {
-            searchWidgetDiv.style.display = 'none';
-        }
-    });
-  </script>
-</body>
-</html>
+    <header class="app-title">DiscoverLocal</header>
+    <!-- Changed to a button to prevent redirection -->
+    <button class="addRecordBtn" id="addRecord">Add Record</button>
+    <button id="toggleSearch" class="toggle-search-btn">Search</button>
+    <div id="searchWidgetDiv"></div>
+    <div id="viewDiv"></div>
+  
+    <!-- Embed Survey123 form -->
+    <div class="embed-container" id="surveyContainer" style="display:none;">
+      <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="Add Venue to DiscoverLocal" src="https://survey123.arcgis.com/share/f5771cd2163841a5b600403e6c2f0744" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
+    </div>
+  
+    <script>
+      // Toggle Search Widget
+      document.getElementById('toggleSearch').addEventListener('click', function() {
+          var searchWidgetDiv = document.getElementById('searchWidgetDiv');
+          if (searchWidgetDiv.style.display === 'none') {
+              searchWidgetDiv.style.display = 'block';
+          } else {
+              searchWidgetDiv.style.display = 'none';
+          }
+      });
+  
+      // Toggle Survey123 Form
+      document.getElementById('addRecord').addEventListener('click', function() {
+          var surveyContainer = document.getElementById('surveyContainer');
+          if (surveyContainer.style.display === 'none') {
+              surveyContainer.style.display = 'block';
+          } else {
+              surveyContainer.style.display = 'none';
+          }
+      });
+  
+      // Adjust iframe height based on content
+      var survey123webform = document.getElementsByName('survey123webform')[0];
+      window.addEventListener("message", e => {
+          if (e.data) {
+              var t = JSON.parse(e.data);
+              ["survey123:webform:formLoaded", "survey123:onFormLoaded"].includes(t.event) && t.contentHeight && (survey123webform.parentNode.style.height = t.contentHeight + "px") && (survey123webform.parentNode.style["padding-bottom"] = "unset");
+          }
+      });
+    </script>
+  </body>
+  </html>
