@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- meta for the browser to allow for mobile first design -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-
   <title>Discover Local</title>
-
   <style>
-    html,
-    body,
-    #viewDiv {
+    html, body, #viewDiv {
         padding: 0;
         margin: 0;
         height: 100%;
@@ -31,15 +26,15 @@
         box-sizing: border-box;
     }
 
-    .addRecordBtn,
-    .toggle-search-btn {
+    .action-select {
         position: fixed;
         z-index: 10;
-        bottom: 10px;
+        top: 10px;
+        right: 10px;
         background-color: #8B0000;
         color: white;
         padding: 8px 16px;
-        border: none;
+        border: white;
         border-radius: 4px;
         font-size: 14px;
         cursor: pointer;
@@ -47,16 +42,7 @@
         box-sizing: border-box;
     }
 
-    .addRecordBtn {
-        right: 10px;
-    }
-
-    .toggle-search-btn {
-        left: 10px;
-    }
-
-    .addRecordBtn:hover,
-    .toggle-search-btn:hover {
+    .action-select:hover {
         background-color: #640000;
     }
 
@@ -71,21 +57,6 @@
         box-sizing: border-box;
     }
 
-    .esri-search .esri-search__container {
-        background-color: #8B0000 !important;
-        color: black !important;
-    }
-
-    .esri-search .esri-input {
-        color: black !important;
-    }
-
-    .esri-search .esri-button {
-        background-color: #8B0000 !important;
-        color: black !important;
-    }
-
-    /* Embed Survey123 form styles */
     .embed-container {
         position: relative;
         height: 0;
@@ -106,12 +77,8 @@
         margin-bottom: -15px;
     }
   </style>
-
-  <!--importing the css and libraries for esri.js-->
   <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
   <script src="https://js.arcgis.com/4.29/"></script>
-
-  <!--loading the modules-->
   <script>
     require([
       "esri/config", 
@@ -123,9 +90,9 @@
       "esri/renderers/UniqueValueRenderer",
       "esri/symbols/SimpleMarkerSymbol"
     ], (esriConfig, Map, MapView, Locate, Search, FeatureLayer, UniqueValueRenderer, SimpleMarkerSymbol) => {
-  
 
-        esriConfig.apiKey = "YAAPK35e8e98d277843dfa2ecdb1ac5596534DUB-IUl6Q31xNVu54SYAcGis0XVil_5jLFCe1-ROFe_wjMpb0UxI4IkOSh_Cgjl3";
+
+        esriConfig.apiKey = "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU";
 
         const map = new Map({
               basemap: "satellite"
@@ -147,8 +114,9 @@
 
         const layer= new FeatureLayer({
             url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
+
         });
-        
+
         map.add(layer);
 
         view.ui.add (locateBtn, {
@@ -173,46 +141,27 @@
 
 <body>
     <header class="app-title">DiscoverLocal</header>
-    <!-- Changed to a button to prevent redirection -->
-    <button class="addRecordBtn" id="addRecord">Add Record</button>
-    <button id="toggleSearch" class="toggle-search-btn">Search</button>
+    <select class="action-select" id="actionSelect">
+        <option value="">Options</option>
+        <option value="addRecord">Add Location</option>
+        <option value="toggleSearch">Toggle Search</option>
+    </select>
     <div id="searchWidgetDiv"></div>
     <div id="viewDiv"></div>
-  
-    <!-- Embed Survey123 form -->
     <div class="embed-container" id="surveyContainer" style="display:none;">
       <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="DiscoverLocal" src="https://survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
     </div>
-  
     <script>
-      // Toggle Search Widget
-      document.getElementById('toggleSearch').addEventListener('click', function() {
-          var searchWidgetDiv = document.getElementById('searchWidgetDiv');
-          if (searchWidgetDiv.style.display === 'none') {
-              searchWidgetDiv.style.display = 'block';
-          } else {
-              searchWidgetDiv.style.display = 'none';
-          }
-      });
-  
-      // Toggle Survey123 Form
-      document.getElementById('addRecord').addEventListener('click', function() {
-          var surveyContainer = document.getElementById('surveyContainer');
-          if (surveyContainer.style.display === 'none') {
-              surveyContainer.style.display = 'block';
-          } else {
-              surveyContainer.style.display = 'none';
-          }
-      });
-  
-      // Adjust iframe height based on content
-      var survey123webform = document.getElementsByName('survey123webform')[0];
-      window.addEventListener("message", e => {
-          if (e.data) {
-              var t = JSON.parse(e.data);
-              ["survey123:webform:formLoaded", "survey123:onFormLoaded"].includes(t.event) && t.contentHeight && (survey123webform.parentNode.style.height = t.contentHeight + "px") && (survey123webform.parentNode.style["padding-bottom"] = "unset");
+      document.getElementById('actionSelect').addEventListener('change', function() {
+          var action = this.value;
+          if (action === 'toggleSearch') {
+              var searchWidgetDiv = document.getElementById('searchWidgetDiv');
+              searchWidgetDiv.style.display = searchWidgetDiv.style.display === 'none' ? 'block' : 'none';
+          } else if (action === 'addRecord') {
+              var surveyContainer = document.getElementById('surveyContainer');
+              surveyContainer.style.display = surveyContainer.style.display === 'none' ? 'block' : 'none';
           }
       });
     </script>
-  </body>
-  </html>
+</body>
+</html>
