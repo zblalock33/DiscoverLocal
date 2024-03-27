@@ -145,45 +145,11 @@
             view : view
         });
 
-        // Define a renderer for the venue types
-        const venueTypeRenderer = new UniqueValueRenderer({
-          field: "venue_type",
-          uniqueValueInfos: [
-            {
-              value: "Bar",
-              symbol: new SimpleMarkerSymbol({
-                color: "red",
-                size: "20px",
-                outline: { color: "white" }
-              }),
-              label: "Bar"
-            },
-            {
-              value: "Restaurant",
-              symbol: new SimpleMarkerSymbol({
-                color: "green",
-                size: "20px",
-                outline: { color: "white" }
-              }),
-              label: "Restaurant"
-            },
-            {
-              value: "Arcade",
-              symbol: new SimpleMarkerSymbol({
-                color: "blue",
-                size: "20px",
-                outline: { color: "white" }
-              }),
-              label: "Arcade"
-            }
-            // Add more venue types as needed
-          ]
-        });
-
         const layer= new FeatureLayer({
             url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
-            renderer: venueTypeRenderer // Use the renderer for the layer
         });
+        
+        map.add(layer);
 
         view.ui.add (locateBtn, {
             position: "top-left"
@@ -198,7 +164,7 @@
             autoSelect: true
         });
 
-        map.add(layer);
+    
 
   });
 
