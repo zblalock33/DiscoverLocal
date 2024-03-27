@@ -113,14 +113,17 @@
 
   <!--loading the modules-->
   <script>
-  require([
-    "esri/config", 
-    "esri/Map", 
-    "esri/views/MapView", 
-    "esri/widgets/Locate", 
-    "esri/widgets/Search",
-    "esri/layers/FeatureLayer"
-  ], (esriConfig, Map, MapView, Locate, Search, FeatureLayer) => {
+    require([
+      "esri/config", 
+      "esri/Map", 
+      "esri/views/MapView", 
+      "esri/widgets/Locate", 
+      "esri/widgets/Search",
+      "esri/layers/FeatureLayer",
+      "esri/renderers/UniqueValueRenderer",
+      "esri/symbols/SimpleMarkerSymbol"
+    ], (esriConfig, Map, MapView, Locate, Search, FeatureLayer, UniqueValueRenderer, SimpleMarkerSymbol) => {
+  
 
         esriConfig.apiKey = "YAAPK35e8e98d277843dfa2ecdb1ac5596534DUB-IUl6Q31xNVu54SYAcGis0XVil_5jLFCe1-ROFe_wjMpb0UxI4IkOSh_Cgjl3";
 
@@ -142,8 +145,44 @@
             view : view
         });
 
+        // Define a renderer for the venue types
+        const venueTypeRenderer = new UniqueValueRenderer({
+          field: "venue_type",
+          uniqueValueInfos: [
+            {
+              value: "Bar",
+              symbol: new SimpleMarkerSymbol({
+                color: "red",
+                size: "20px",
+                outline: { color: "white" }
+              }),
+              label: "Bar"
+            },
+            {
+              value: "Restaurant",
+              symbol: new SimpleMarkerSymbol({
+                color: "green",
+                size: "20px",
+                outline: { color: "white" }
+              }),
+              label: "Restaurant"
+            },
+            {
+              value: "Arcade",
+              symbol: new SimpleMarkerSymbol({
+                color: "blue",
+                size: "20px",
+                outline: { color: "white" }
+              }),
+              label: "Arcade"
+            }
+            // Add more venue types as needed
+          ]
+        });
+
         const layer= new FeatureLayer({
-            url: "https://https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_f5771cd2163841a5b600403e6c2f0744_results/FeatureServer.is/08z9Lr"
+            url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
+            renderer: venueTypeRenderer // Use the renderer for the layer
         });
 
         view.ui.add (locateBtn, {
@@ -176,7 +215,7 @@
   
     <!-- Embed Survey123 form -->
     <div class="embed-container" id="surveyContainer" style="display:none;">
-      <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="Add Venue to DiscoverLocal" src="https://survey123.arcgis.com/share/f5771cd2163841a5b600403e6c2f0744" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
+      <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="DiscoverLocal" src="https://survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
     </div>
   
     <script>

@@ -5,6 +5,8 @@
 
 "API" : "AAPK35e8e98d277843dfa2ecdb1ac5596534DUB-IUl6Q31xNVu54SYAcGis0XVil_5jLFCe1-ROFe_wjMpb0UxI4IkOSh_Cgjl3",
 
-"SURVEYID : "survey123.arcgis.com/share/f5771cd2163841a5b600403e6c2f0744"
+"SURVEYID" : "survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" ,
+
+"SURVEY FEATURE LAYER" : "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_f5771cd2163841a5b600403e6c2f0744_results/FeatureServer.is/08z9Lr"
 
 }
