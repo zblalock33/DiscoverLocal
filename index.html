@@ -174,28 +174,42 @@
         });
 
    // Configure the Search widget to use the feature layer as its source
-   const searchWidget = new Search({
-            view: view,
-            sources: [
-              {
-                layer: layer,
-                searchFields: ["venue_name", "venue_type",], // Specify the fields to search in
-                displayField: "venue_name", // Specify the field name to display in the search results
-                exactMatch: false,
-                outFields: ["*"],
-                name: "Local Venues",
-                placeholder: "Search for a venue",
-                popupTemplate: popupTemplate // Use the custom popup template
-              }
-            ],
-            popupEnabled: true,
-            popupOpenOnSelect: true,
-            resultGraphicEnabled: true,
-            autoSelect: true
-        });
+    // Configure the Search widget with multiple sources
+    const searchWidget = new Search({
+        view: view,
+        sources: [
+          {
+            // Global search source
+            layer: new FeatureLayer({
+              url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/GlobalSearch/FeatureServer/0"
+            }),
+            searchFields: ["Name", "Type"], // Adjust these fields based on your global search layer
+            displayField: "Name", // Adjust based on your global search layer
+            exactMatch: false,
+            outFields: ["*"],
+            name: "Global Search",
+            placeholder: "example: Central Park",
+          },
+          {
+            // Specific venue search source
+            layer: layer,
+            searchFields: ["venue_name", "venue_type"],
+            displayField: "venue_name",
+            exactMatch: false,
+            outFields: ["*"],
+            name: "Local Venues",
+            placeholder: "Search for a venue",
+            popupTemplate: popupTemplate
+          }
+        ],
+        includeDefaultSources: false, // Set to false to exclude the default ArcGIS Online sources
+        popupEnabled: true,
+        popupOpenOnSelect: true,
+        resultGraphicEnabled: true,
+        autoSelect: true
+    });
 
-           // Attach the search widget to its container
-        searchWidget.container = document.getElementById("searchWidgetDiv");
+    searchWidget.container = document.getElementById("searchWidgetDiv");
 
         document.getElementById('actionSelect').addEventListener('change', function() {
             var action = this.value;
