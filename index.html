@@ -104,7 +104,8 @@
       "esri/widgets/Locate", 
       "esri/widgets/Search",
       "esri/layers/FeatureLayer",
-    ], function(esriConfig, Map, MapView, Locate, Search, FeatureLayer, Graphic, SimpleMarkerSymbol, SimpleRenderer) {
+      "esri/tasks/Locator"
+    ], function(esriConfig, Map, MapView, Locate, Search, FeatureLayer) {
 
 
         esriConfig.apiKey = "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU";
@@ -180,27 +181,29 @@
     {
       // Your custom venue search source
       layer: layer,
-      searchFields: ["venue_name", "venue_type"], // Specify the fields to search in
-      displayField: "venue_name", // Specify the field name to display in the search results
+      searchFields: ["venue_name", "venue_type"],
+      displayField: "venue_name",
       exactMatch: false,
       outFields: ["*"],
       name: "Venues",
       placeholder: "Search for a venue",
-      popupTemplate: popupTemplate // Use the custom popup template
+      popupTemplate: popupTemplate
     },
     {
-      // Default search source for general location searches
-      // This will use ArcGIS Online's World Geocoding Service by default
+      // Default search source for normal location searches
+      locator: new Locator({ url: "//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer" }),
+      singleLineFieldName: "SingleLine",
       name: "Global Search",
-      placeholder: "Search for a location"
+      placeholder: "Search for an address or place",
+      maxResults: 3,
+      maxSuggestions: 6,
+      suggestionsEnabled: true,
+      minSuggestCharacters: 0
     }
   ],
-  includeDefaultSources: true, // Set to false to exclude any other default sources
-  popupEnabled: true,
-  popupOpenOnSelect: true,
-  resultGraphicEnabled: true,
-  autoSelect: true
+  includeDefaultSources: false
 });
+
            // Attach the search widget to its container
         searchWidget.container = document.getElementById("searchWidgetDiv");
 
