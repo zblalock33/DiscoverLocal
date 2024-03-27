@@ -78,8 +78,8 @@
     <header class="app-title">DiscoverLocal</header>
     <select class="action-select" id="actionSelect">
       <option value="">Options</option>
-      <option value="addRecord">Add Location</option>
-      <option value="toggleSearch">Toggle Search</option>
+      <option value="addRecord">Add Venue</option>
+      <option value="toggleSearch">Search</option>
     </select>
     <div id="searchWidgetDiv"></div>
     <input type="text" id="venueNameInput" placeholder="Venue Name" />
@@ -155,7 +155,7 @@
             },
             {
               type: "text",
-              text: "<a href='https://arcg.is/1XnO550' target='_blank'>Take the Survey</a>"
+              text: "<a href='https://arcg.is/1XnO550' target='_blank'>Leave a Review and Rating!</a>"
             }
           ]
         };
@@ -179,7 +179,7 @@
             sources: [
               {
                 layer: layer,
-                searchFields: ["venue_name", "venue_type", "untitled_question_9_other"], // Specify the fields to search in
+                searchFields: ["venue_name", "venue_type",], // Specify the fields to search in
                 displayField: "venue_name", // Specify the field name to display in the search results
                 exactMatch: false,
                 outFields: ["*"],
@@ -193,6 +193,9 @@
             resultGraphicEnabled: true,
             autoSelect: true
         });
+
+           // Attach the search widget to its container
+        searchWidget.container = document.getElementById("searchWidgetDiv");
 
         document.getElementById('actionSelect').addEventListener('change', function() {
             var action = this.value;
