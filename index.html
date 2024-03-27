@@ -87,9 +87,10 @@
       "esri/widgets/Locate", 
       "esri/widgets/Search",
       "esri/layers/FeatureLayer",
-      "esri/renderers/UniqueValueRenderer",
-      "esri/symbols/SimpleMarkerSymbol"
-    ], (esriConfig, Map, MapView, Locate, Search, FeatureLayer, UniqueValueRenderer, SimpleMarkerSymbol) => {
+      "esri/Graphic",
+      "esri/renderers/SimpleRenderer", // Add SimpleRenderer module
+      "esri/symbols/SimpleMarkerSymbol", // Add SimpleMarkerSymbol module
+    ], function(esriConfig, Map, MapView, Locate, Search, FeatureLayer, Graphic, SimpleMarkerSymbol, SimpleRenderer) {
 
 
         esriConfig.apiKey = "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU";
@@ -112,10 +113,23 @@
             view : view
         });
 
-        const layer= new FeatureLayer({
-            url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
+      // Define a black diamond symbol
+  const blackDiamondSymbol = new SimpleMarkerSymbol({
+    color: "black",
+    size: "12px",
+    style: "circle" // diamond shape
+  });
 
-        });
+  // Create a renderer for the feature layer using the black diamond symbol
+  const renderer = new SimpleRenderer({
+    symbol: defaultSymbol
+  });
+
+  // Apply the renderer to the feature layer
+  const layer = new FeatureLayer({
+    url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer/0",
+    renderer: renderer // Set the renderer here
+  });
 
         map.add(layer);
 
@@ -132,7 +146,6 @@
             autoSelect: true
         });
 
-    
 
   });
 
