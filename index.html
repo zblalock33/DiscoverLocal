@@ -106,10 +106,46 @@
           view: view
         });
 
-        // Define and initialize the FeatureLayer (assuming you have a valid URL for the FeatureLayer)
-        var layer = new FeatureLayer({
-          url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer" // Replace with your Feature Layer URL
+        // Define the popup template with a link to the survey
+  const popupTemplate = {
+          title: "{venue_name}",
+          content: [
+            {
+              type: "fields",
+              fieldInfos: [
+                {
+                  fieldName: "venue_name",
+                  label: "Venue Name"
+                },
+                {
+                  fieldName: "venue_type",
+                  label: "Venue Type"
+                },
+                {
+                  fieldName: "untitled_question_9_other",
+                  label: "Other Venue Type"
+                },
+                {
+                  fieldName: "add_venue_location",
+                  label: "Venue Location"
+                }
+                // ... [add other fields as needed] ...
+              ]
+            },
+            {
+              type: "text",
+              text: "<a href='https://arcg.is/1XnO550' target='_blank'>Take the Survey</a>"
+            }
+          ]
+        };
+
+        // Apply the popup template to the feature layer
+        const layer = new FeatureLayer({
+          url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
+          outFields: ["*"],
+          popupTemplate: popupTemplate
         });
+
 
         let currentWidget = ''; // Track the current widget
 
