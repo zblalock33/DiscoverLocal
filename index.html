@@ -79,12 +79,12 @@
       height: 100%;
     }
     .esri-search {
-  background-color: #8B0000; /* Dark Red */
-  color: whitesmoke; /* White text color */
-  border: 1px solid #000; /* Black border */
-  border-radius: 4px;
-  z-index: 11; /* Ensure it's above other elements */
-}
+      background-color: #8B0000; /* Dark Red */
+      color: whitesmoke; /* White text color */
+      border: 1px solid #000; /* Black border */
+      border-radius: 4px;
+      z-index: 11; /* Ensure it's above other elements */
+    }
   </style>
 </head>
 <body>
@@ -94,18 +94,18 @@
     <option value="searchLocation">Search Location</option>
     <option value="searchVenues">Search Venues</option>
     <option value="addVenue">Add Venue</option>
-</select>
-    <div id="searchWidgetDiv"></div>
-    <div id="venueSearchDiv">
-  <input type="text" id="venueNameInput" placeholder="Venue Name" />
-  <div id="suggestionBox" class="suggestions"></div>
-  <select id="venueTypeInput">
-    <option value="">Select Venue Type</option>
-    <option value="Bar">Bar</option>
-    <option value="Restaurant">Restaurant</option>
-    <option value="Arcade">Arcade</option>
-    <option value="Other">Other</option>
   </select>
+  <div id="searchWidgetDiv"></div>
+  <div id="venueSearchDiv">
+    <input type="text" id="venueNameInput" placeholder="Venue Name" />
+    <div id="suggestionBox" class="suggestions"></div>
+    <select id="venueTypeInput">
+      <option value="">Select Venue Type</option>
+      <option value="Bar">Bar</option>
+      <option value="Restaurant">Restaurant</option>
+      <option value="Arcade">Arcade</option>
+      <option value="Other">Other</option>
+    </select>
     <button id="searchButton">Search</button>
   </div>
   <div class="embed-container" id="surveyContainer" style="display:none;">
@@ -137,13 +137,11 @@
               }
         });
 
-          // Define and initialize the Search widget
-          var locationSearchWidget = new Search({
+        var locationSearchWidget = new Search({
           view: view
         });
 
-        // Define the popup template with a link to the survey
-  const popupTemplate = {
+        const popupTemplate = {
           title: "{venue_name}",
           content: [
             {
@@ -157,12 +155,10 @@
                   fieldName: "venue_type",
                   label: "Venue Type"
                 },
-
                 {
                   fieldName: "add_venue_location",
                   label: "Venue Location"
                 }
-                // ... [add other fields as needed] ...
               ]
             },
             {
@@ -172,7 +168,6 @@
           ]
         };
 
-        // Apply the popup template to the feature layer
         const layer = new FeatureLayer({
           url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
           outFields: ["*"],
@@ -181,7 +176,7 @@
 
         map.add(layer);
 
-        let currentWidget = ''; // Track the current widget
+        let currentWidget = '';
 
         document.getElementById('actionSelect').addEventListener('change', function(event) {
           toggleWidgets(event.target.value);
@@ -192,32 +187,41 @@
           if (input.length > 2) {
             suggestVenues(input);
           } else {
-            document.getElementById('suggestionBox').innerHTML = ''; // Corrected ID
+            document.getElementById('suggestionBox').innerHTML = '';
+          }
+        });
+
+        document.getElementById('venueNameInput').addEventListener('keydown', function(event) {
+          if (event.key === 'Enter') {
+            var firstSuggestion = document.querySelector('.suggestion');
+            if (firstSuggestion) {
+              firstSuggestion.click();
+            }
           }
         });
 
         function suggestVenues(input) {
-          // Suggestion query logic remains the same
+          // Placeholder for suggestion query logic
+          var features = queryForSuggestions(input); // Implement this function based on your data source
+          displaySuggestions(features);
+        }
 
-          // Display suggestions
-          function displaySuggestions(features) {
-            var suggestionsList = document.getElementById('suggestionBox'); // Corrected ID
-            suggestionsList.innerHTML = ''; // Clear previous suggestions
-            features.forEach(function(feature) {
-              var li = document.createElement('li');
-              li.textContent = feature.attributes.venue_name;
-              li.className = 'suggestion';
-              li.onclick = function() {
-                document.getElementById('venueNameInput').value = feature.attributes.venue_name;
-                suggestionsList.innerHTML = ''; // Clear suggestions
-              };
-              suggestionsList.appendChild(li);
-            });
-          }
+        function displaySuggestions(features) {
+          var suggestionsList = document.getElementById('suggestionBox');
+          suggestionsList.innerHTML = '';
+          features.forEach(function(feature) {
+            var li = document.createElement('li');
+            li.textContent = feature.attributes.venue_name;
+            li.className = 'suggestion';
+            li.onclick = function() {
+              document.getElementById('venueNameInput').value = feature.attributes.venue_name;
+              suggestionsList.innerHTML = '';
+            };
+            suggestionsList.appendChild(li);
+          });
         }
 
         function toggleWidgets(action) {
-          // Hide all widgets and iframe
           document.getElementById('searchWidgetDiv').style.display = 'none';
           document.getElementById('venueSearchDiv').style.display = 'none';
           document.getElementById('surveyContainer').style.display = 'none';
@@ -252,38 +256,45 @@
           performVenueSearch(venueName, venueType);
         });
 
-function performVenueSearch(venueName, venueType) {
-  var query = layer.createQuery();
-  var whereClause = [];
+        function performVenueSearch(venueName, venueType) {
+          var query = layer.createQuery();
+          var whereClause = [];
 
-  if (venueName) {
-    whereClause.push("venue_name LIKE '%" + venueName.replace(/'/g, "''") + "%'");
-  }
-  if (venueType) {
-    whereClause.push("venue_type = '" + venueType.replace(/'/g, "''") + "'");
-  }
+          if (venueName) {
+            whereClause.push("venue_name LIKE '%" + venueName.replace(/'/g, "''") + "%'");
+          }
+          if (venueType) {
+            whereClause.push("venue_type = '" + venueType.replace(/'/g, "''") + "'");
+          }
 
-  query.where = whereClause.join(' AND ');
-  query.returnGeometry = true;
-  query.outFields = ["*"];
+          query.where = whereClause.join(' AND ');
+          query.returnGeometry = true;
+          query.outFields = ["*"];
 
-  layer.queryFeatures(query).then(function(results) {
-    if (results.features.length > 0) {
-      view.goTo(results.features).then(function() {
-        view.popup.open({
-          features: results.features,
-          location: results.features[0].geometry // Assuming you want to focus on the first result
-        });
-      });
-    } else {
-      console.log("No results found.");
-    }
-  }).catch(function(error) {
-    console.error("Search failed: ", error);
-  });
-}
+          layer.queryFeatures(query).then(function(results) {
+            if (results.features.length > 0) {
+              view.goTo(results.features).then(function() {
+                view.popup.open({
+                  features: results.features,
+                  location: results.features[0].geometry
+                });
+              });
+            } else {
+              console.log("No results found.");
+            }
+          }).catch(function(error) {
+            console.error("Search failed: ", error);
+          });
+        }
 
-});
-</script>
+        // Placeholder function for querying suggestions
+        function queryForSuggestions(input) {
+          // Implement this function based on your data source
+          // This should return an array of features matching the input
+          return []; // Placeholder return
+        }
+
+    });
+  </script>
 </body>
 </html>
