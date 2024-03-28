@@ -12,6 +12,34 @@
       height: 100%;
       width: 100%;
     }
+    /* Add your custom styles here */
+    .custom-popup {
+      background-color: #333; /* Dark background for contrast */
+      color: #fff; /* White text */
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .custom-popup h1 {
+      font-size: 18px;
+      margin: 0 0 10px 0;
+    }
+    .custom-popup p {
+      margin: 0;
+      font-size: 14px;
+    }
+    .custom-button {
+      background-color: #007bff; /* Bootstrap primary color */
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      margin-top: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .custom-button:hover {
+      background-color: #0056b3; /* Darken on hover */
+    }
+    
     #actionSelect {
       position: fixed;
       z-index: 30;
@@ -79,28 +107,27 @@
       height: 100%;
     }
     .esri-search {
-      background-color: #8B0000; /* Dark Red */
-      color: black; /* Black text color */
+      background-color: #8B0000 !important;/* Dark Red */
+      color: black !important; /* Black text color */
       border: 1px solid #000; /* Black border */
       border-radius: 4px;
       z-index: 11; /* Ensure it's above other elements */
     }
     .esri-popup {
-  background-color: #8B0000; /* Dark Red */
-  color: black; /* Black text color */
-  width: 300px; /* Fixed width */
-  height: 300px; /* Fixed height */
-  margin-left: -150px; /* Centers the popup */
-  margin-top: -150px; /* Centers the popup */
-}
-
-.esri-popup .esri-popup__main-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
+      background-color: #8B0000 !important; /* Dark Red */
+      color: black; /* Black text color */
+      width: 300px; /* Fixed width */
+      height: 300px; /* Fixed height */
+      margin-left: -150px; /* Centers the popup */
+      margin-top: -150px; /* Centers the popup */
+    }
+    .esri-popup .esri-popup__main-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
   </style>
 </head>
 <body>
@@ -159,34 +186,14 @@
         });
 
         const popupTemplate = {
-  title: "{venue_name}",
-  content: [
-    {
-      type: "fields",
-      fieldInfos: [
-        {
-          fieldName: "venue_name",
-          label: "Venue Name"
-        },
-        {
-          fieldName: "venue_type",
-          label: "Venue Type"
-        },
-        {
-          fieldName: "add_venue_location",
-          label: "Venue Location"
-        }
-      ]
-    },
-    {
-      type: "text",
-      text: `<div id="customPopupContent">
-               <button id="openSurveyButton" style="padding: 8px; margin-top: 10px; cursor: pointer;">Review</button>
-             </div>`
-    }
-  ]
-};
-
+          title: "{venue_name}",
+          content: `<div class="custom-popup">
+                      <h1>{venue_name}</h1>
+                      <p>Type: {venue_type}</p>
+                      <p>Location: {add_venue_location}</p>
+                      <button id="openSurveyButton" class="custom-button">Review</button>
+                    </div>`
+        };
 
         const layer = new FeatureLayer({
           url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
@@ -221,7 +228,7 @@
         });
 
         function suggestVenues(input) {
-          // Placeholder for suggestion query logic
+          // Example suggestion logic
           var features = queryForSuggestions(input); // Implement this function based on your data source
           displaySuggestions(features);
         }
@@ -303,7 +310,8 @@
               console.log("No results found.");
             }
           }).catch(function(error) {
-            console.error("Search failed: ", error);
+            console
+.error("Search failed: ", error);
           });
         }
 
