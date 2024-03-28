@@ -144,32 +144,10 @@
 
         const popupTemplate = {
           title: "{venue_name}",
-          content: [
-            {
-              type: "fields",
-              fieldInfos: [
-                {
-                  fieldName: "venue_name",
-                  label: "Venue Name"
-                },
-                {
-                  fieldName: "venue_type",
-                  label: "Venue Type"
-                },
-                {
-                  fieldName: "add_venue_location",
-                  label: "Venue Location"
-                }
-              ]
-            },
-            {
-              type: "text",
-              text: function(feature) {
-                var surveyUrl = "https://survey123.arcgis.com/share/your-survey-id?venue_id=" + feature.graphic.attributes.OBJECTID; // Assuming OBJECTID is used as a unique identifier
-                return "<a href='" + surveyUrl + "' target='_blank'>Take the Survey</a>";
-              }
-            }
-          ]
+          content: function(feature) {
+            var surveyUrl = "https://survey123.arcgis.com/share/9879cb02e0fc462ebd7d5f464ca41a0d?objectId=" + feature.graphic.attributes.objectid;
+            return '<div class="embed-container"><iframe name="survey123webform" frameborder="0" marginheight="0" marginwidth="0" title="Reviewer" src="' + surveyUrl + '" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe></div>';
+          }
         };
 
         const layer = new FeatureLayer({
