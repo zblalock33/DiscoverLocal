@@ -297,6 +297,22 @@
         }
 
     });
+
+    view.popup.watch("visible", function(visible) {
+  if (visible) {
+    var openSurveyButton = document.getElementById("openSurveyButton");
+    var surveyPlaceholder = document.getElementById("surveyPlaceholder");
+    if (openSurveyButton) {
+      openSurveyButton.onclick = function() {
+        if (surveyPlaceholder.style.display === "none") {
+          surveyPlaceholder.style.display = "block";
+        } else {
+          surveyPlaceholder.style.display = "none";
+        }
+      };
+    }
+  }
+});
   </script>
 </body>
 </html>
