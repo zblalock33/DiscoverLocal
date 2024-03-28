@@ -143,12 +143,14 @@
         });
 
         const popupTemplate = {
-          title: "{venue_name}",
-          content: function(feature) {
-            var surveyUrl = "https://survey123.arcgis.com/share/9879cb02e0fc462ebd7d5f464ca41a0d?objectId=" + feature.graphic.attributes.objectid;
-            return '<div class="embed-container"><iframe name="survey123webform" frameborder="0" marginheight="0" marginwidth="0" title="Reviewer" src="' + surveyUrl + '" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe></div>';
-          }
-        };
+            title: "{venue_name}",
+            content: function(feature) {
+                // Assuming 'feature' is the feature object with the attributes you need
+                var surveyUrl = "https://survey123.arcgis.com/share/9879cb02e0fc462ebd7d5f464ca41a0d?objectId=" + feature.graphic.attributes.objectid;
+                return '<div class="embed-container"><iframe name="survey123webform" frameborder="0" marginheight="0" marginwidth="0" title="Reviewer" src="' + surveyUrl + '" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe></div>';
+            }
+            };
+        
 
         const layer = new FeatureLayer({
           url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
