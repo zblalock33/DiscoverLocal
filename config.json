@@ -9,3 +9,42 @@
 "Feature Layer" : "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer"
 
 }
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discover Local</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
+  <link rel="stylesheet" href="G:\ArcGis\Midterm\CodeSpace\DiscoverLocal\style.css">
+</head>
+<body>
+  <div id="viewDiv"></div>
+  <select id="actionSelect">
+    <option value="">Select Action</option>
+    <option value="searchLocation">Search Location</option>
+    <option value="searchVenues">Search Venues</option>
+    <option value="addVenue">Add Venue</option>
+  </select>
+  <div id="searchWidgetDiv"></div>
+  <div id="venueSearchDiv">
+    <input type="text" id="venueNameInput" placeholder="Venue Name" />
+    <select id="venueTypeInput">
+      <option value="">Select Venue Type</option>
+      <option value="Bar">Bar</option>
+      <option value="Restaurant">Restaurant</option>
+      <option value="Arcade">Arcade</option>
+      <option value="Other">Other</option>
+    </select>
+    <button id="searchButton">Search</button>
+    <div id="errorContainer"></div> <!-- Container for displaying error messages -->
+  </div>
+  <div id="surveyContainer" class="embed-container" style="display:none;">
+    <iframe name="survey123webform" title="DiscoverLocal" src="https://survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
+  </div>
+  <script src="https://js.arcgis.com/4.29/"></script>
+  <script src="main.js"></script> <!-- Link to external JavaScript file -->
+</body>
+</html>

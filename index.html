@@ -5,56 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Discover Local</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
-  <style>
-    html, body, #viewDiv {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-      width: 100%;
-    }
-    #actionSelect {
-      position: fixed;
-      z-index: 10;
-      top: 10px;
-      right: 10px;
-      background-color: #8B0000; /* Dark Red */
-      color: #fff; /* White text color */
-      padding: 8px;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-      display: block;
-    }
-    #searchWidgetDiv, #venueSearchDiv, #surveyContainer {
-      display: none; /* Initially hide the search widgets and survey container */
-      position: fixed;
-      z-index: 10;
-      top: 50px; /* Position below the dropdown */
-      right: 10px;
-      background-color: #000; /* Black */
-      color: #fff; /* White text color */
-      padding: 8px;
-      border-radius: 4px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.3);
-    }
-    .embed-container {
-      position: fixed;
-      top: 50px;
-      right: 10px;
-      bottom: 10px;
-      left: 10px;
-      border: 0;
-      z-index: 10;
-    }
-    .embed-container iframe {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+  <link rel="stylesheet" href="G:\ArcGis\Midterm\CodeSpace\DiscoverLocal\style.css">
 </head>
 <body>
   <div id="viewDiv"></div>
-  <select class="action-select" id="actionSelect">
+  <select id="actionSelect">
     <option value="">Select Action</option>
     <option value="searchLocation">Search Location</option>
     <option value="searchVenues">Search Venues</option>
@@ -71,180 +26,12 @@
       <option value="Other">Other</option>
     </select>
     <button id="searchButton">Search</button>
+    <div id="errorContainer"></div> <!-- Container for displaying error messages -->
   </div>
-  <div class="embed-container" id="surveyContainer" style="display:none;">
+  <div id="surveyContainer" class="embed-container" style="display:none;">
     <iframe name="survey123webform" title="DiscoverLocal" src="https://survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
   </div>
   <script src="https://js.arcgis.com/4.29/"></script>
-  <script>
-    require([
-      "esri/config", 
-      "esri/Map", 
-      "esri/views/MapView", 
-      "esri/widgets/Search",
-      "esri/layers/FeatureLayer",
-      "esri/Graphic"
-    ], function(esriConfig, Map, MapView, Search, FeatureLayer,Graphic) {
-
-        esriConfig.apiKey = "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU";
-
-        const map = new Map({
-              basemap: "satellite"
-        });
-
-        const view = new MapView({
-              container: "viewDiv",
-              map: map,
-              center: [-98.5795, 39.8283],
-              zoom: 3,
-              ui: {
-                components: ["attribution"]
-              }
-        });
-
-          // Define and initialize the Search widget
-          var locationSearchWidget = new Search({
-          view: view
-        });
-
-        // Define the popup template with a link to the survey
-  const popupTemplate = {
-          title: "{venue_name}",
-          content: [
-            {
-              type: "fields",
-              fieldInfos: [
-                {
-                  fieldName: "venue_name",
-                  label: "Venue Name"
-                },
-                {
-                  fieldName: "venue_type",
-                  label: "Venue Type"
-                },
-                {
-                  fieldName: "add_venue_location",
-                  label: "Venue Location"
-                }
-                // ... [add other fields as needed] ...
-              ]
-            },
-            {
-              type: "text",
-              text: "<a href='https://arcg.is/1XnO550' target='_blank'>Take the Survey</a>"
-            }
-          ]
-        };
-
-        // Apply the popup template to the feature layer
-        const layer = new FeatureLayer({
-          url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer",
-          outFields: ["*"],
-          popupTemplate: popupTemplate
-        });
-
-
-        let currentWidget = ''; // Track the current widget
-
-        document.getElementById('actionSelect').addEventListener('change', function(event) {
-          toggleWidgets(event.target.value);
-        });
-
-        function toggleWidgets(action) {
-          // Hide all widgets and iframe
-          document.getElementById('searchWidgetDiv').style.display = 'none';
-          document.getElementById('venueSearchDiv').style.display = 'none';
-          document.getElementById('surveyContainer').style.display = 'none';
-          if (currentWidget) {
-            view.ui.remove(locationSearchWidget);
-          }
-
-          if (currentWidget === action) {
-            currentWidget = '';
-            return;
-          }
-
-          currentWidget = action;
-
-          // Show the selected widget or iframe
-          switch(action) {
-            case 'searchLocation':
-              view.ui.add(locationSearchWidget, "top-right");
-              document.getElementById('searchWidgetDiv').style.display = 'block';
-              break;
-            case 'searchVenues':
-              document.getElementById('venueSearchDiv').style.display = 'block';
-              break;
-            case 'addVenue':
-              document.getElementById('surveyContainer').style.display = 'block';
-              break;
-          }
-        }
-
-
-        // Venue Search Functionality
-        document.getElementById('searchButton').addEventListener('click', function() {
-          var venueName = document.getElementById('venueNameInput').value.trim();
-          var venueType = document.getElementById('venueTypeInput').value.trim();
-          performVenueSearch(venueName, venueType);
-        });
-
-        function performVenueSearch(venueName, venueType) {
-  var query = layer.createQuery();
-  var whereClause = [];
-
-  if (venueName) {
-    whereClause.push("venue_name LIKE '%" + venueName.replace(/'/g, "''") + "%'");
-  }
-  if (venueType) {
-    whereClause.push("venue_type = '" + venueType.replace(/'/g, "''") + "'");
-  }
-
-  query.where = whereClause.join(' AND ');
-  query.returnGeometry = true;
-  query.outFields = ["*"]; // You can specify fields if you don't need all of them
-
-  layer.queryFeatures(query).then(function(results) {
-    if (results.features.length > 0) {
-      // Define a symbol for displaying the found features as markers
-      var markerSymbol = {
-        type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-        color: [226, 119, 40], // Orange
-        outline: {
-          color: [255, 255, 255], // White
-          width: 2
-        }
-      };
-
-      // Remove any existing graphics (if necessary)
-      view.graphics.removeAll();
-
-      // Loop through each feature returned from the query
-      results.features.forEach(function(feature) {
-        // Create a graphic for each feature using the symbol defined above
-        var graphic = new esri.Graphic({
-          geometry: feature.geometry,
-          symbol: markerSymbol
-        });
-
-        // Add the graphic to the map view
-        view.graphics.add(graphic);
-      });
-
-      // Zoom the map to the bounds of the returned features
-      view.goTo(results.features.map(function(feature) {
-        return feature.geometry;
-      }));
-    } else {
-      console.log("No results found.");
-      // Inform the user that no results were found
-    }
-  }).catch(function(error) {
-    console.error("Search failed: ", error);
-  });
-}
-
-    });
-  </script>
+  <script src="G:\ArcGis\Midterm\CodeSpace\DiscoverLocal\main.jss"></script> <!-- Link to external JavaScript file -->
 </body>
 </html>
