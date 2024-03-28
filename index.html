@@ -12,7 +12,7 @@
       height: 100%;
       width: 100%;
     }
-    #actionSelect {
+    #actionSelect, .suggestion-box {
       position: fixed;
       z-index: 10;
       top: 10px;
@@ -59,17 +59,18 @@
     <option value="searchLocation">Search Location</option>
     <option value="searchVenues">Search Venues</option>
     <option value="addVenue">Add Venue</option>
+</select>
+    <div id="searchWidgetDiv"></div>
+    <div id="venueSearchDiv">
+  <input type="text" id="venueNameInput" placeholder="Venue Name" />
+  <div id="suggestionBox" class="suggestion-box"></div>
+  <select id="venueTypeInput">
+    <option value="">Select Venue Type</option>
+    <option value="Bar">Bar</option>
+    <option value="Restaurant">Restaurant</option>
+    <option value="Arcade">Arcade</option>
+    <option value="Other">Other</option>
   </select>
-  <div id="searchWidgetDiv"></div>
-  <div id="venueSearchDiv">
-    <input type="text" id="venueNameInput" placeholder="Venue Name" />
-    <select id="venueTypeInput">
-      <option value="">Select Venue Type</option>
-      <option value="Bar">Bar</option>
-      <option value="Restaurant">Restaurant</option>
-      <option value="Arcade">Arcade</option>
-      <option value="Other">Other</option>
-    </select>
     <button id="searchButton">Search</button>
   </div>
   <div class="embed-container" id="surveyContainer" style="display:none;">
@@ -151,13 +152,54 @@
           toggleWidgets(event.target.value);
         });
 
+        document.getElementById('venueNameInput').addEventListener('input', function(event) {
+          var input = event.target.value.trim();
+          if (input.length > 2) { // Suggest after 2 or more characters
+            suggestVenues(input);
+          } else {
+            document.getElementById('suggestionBox').innerHTML = ''; // Clear suggestions if input is too short
+          }
+        });
+
+      
+        function suggestVenues(input) {
+          var query = layer.createQuery();
+          query.where = "venue_name LIKE '%" + input.replace(/'/g, "''") + "%'";
+          query.returnGeometry = false;
+          query.outFields = ["venue_name"];
+          query.num = 5; // Limit to 5 results
+
+          layer.queryFeatures(query).then(function(results) {
+            displaySuggestions(results.features);
+          }).catch(function(error) {
+            console.error("Suggestion query failed: ", error);
+          });
+        }
+
+        function displaySuggestions(features) {
+          var suggestionBox = document.getElementById('suggestionBox');
+          suggestionBox.innerHTML = ''; // Clear previous suggestions
+          features.forEach(function(feature) {
+            var suggestion = document.createElement('div');
+            suggestion.className = 'suggestion';
+            suggestion.textContent = feature.attributes.venue_name;
+            suggestion.onclick = function() {
+              document.getElementById('venueNameInput').value = feature.attributes.venue_name;
+              suggestionBox.innerHTML = ''; // Clear suggestions
+              // Optionally, trigger the search immediately after selecting a suggestion
+              // document.getElementById('searchButton').click();
+            };
+            suggestionBox.appendChild(suggestion);
+          });
+        }
+
         function toggleWidgets(action) {
           // Hide all widgets and iframe
           document.getElementById('searchWidgetDiv').style.display = 'none';
           document.getElementById('venueSearchDiv').style.display = 'none';
           document.getElementById('surveyContainer').style.display = 'none';
           if (currentWidget) {
-            view.ui.remove(locationSearchWidget);
+            view.ui.remove(currentWidget);
           }
 
           if (currentWidget === action) {
@@ -167,25 +209,25 @@
 
           currentWidget = action;
 
-switch(action) {
-  case 'searchLocation':
-    view.ui.add(locationSearchWidget, "top-right");
-    document.getElementById('searchWidgetDiv').style.display = 'block';
-    break;
-  case 'searchVenues':
-    document.getElementById('venueSearchDiv').style.display = 'block';
-    break;
-  case 'addVenue':
-    document.getElementById('surveyContainer').style.display = 'block';
-    break;
-}
-}
+          switch(action) {
+            case 'searchLocation':
+              view.ui.add(locationSearchWidget, "top-right");
+              document.getElementById('searchWidgetDiv').style.display = 'block';
+              break;
+            case 'searchVenues':
+              document.getElementById('venueSearchDiv').style.display = 'block';
+              break;
+            case 'addVenue':
+              document.getElementById('surveyContainer').style.display = 'block';
+              break;
+          }
+        }
 
-document.getElementById('searchButton').addEventListener('click', function() {
-var venueName = document.getElementById('venueNameInput').value.trim();
-var venueType = document.getElementById('venueTypeInput').value.trim();
-performVenueSearch(venueName, venueType);
-});
+        document.getElementById('searchButton').addEventListener('click', function() {
+          var venueName = document.getElementById('venueNameInput').value.trim();
+          var venueType = document.getElementById('venueTypeInput').value.trim();
+          performVenueSearch(venueName, venueType);
+        });
 
 function performVenueSearch(venueName, venueType) {
   var query = layer.createQuery();
