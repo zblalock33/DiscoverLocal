@@ -143,13 +143,33 @@
         });
 
         const popupTemplate = {
-            title: "{venue_name}",
-            content: function(feature) {
-                // Assuming 'feature' is the feature object with the attributes you need
-                var surveyUrl = "https://survey123.arcgis.com/share/9879cb02e0fc462ebd7d5f464ca41a0d?objectId=" + feature.graphic.attributes.objectid;
-                return '<div class="embed-container"><iframe name="survey123webform" frameborder="0" marginheight="0" marginwidth="0" title="Reviewer" src="' + surveyUrl + '" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe></div>';
-            }
-            };
+  title: "{venue_name}",
+  content: [
+    {
+      type: "fields",
+      fieldInfos: [
+        {
+          fieldName: "venue_name",
+          label: "Venue Name"
+        },
+        {
+          fieldName: "venue_type",
+          label: "Venue Type"
+        },
+        {
+          fieldName: "add_venue_location",
+          label: "Venue Location"
+        }
+      ]
+    },
+    {
+      type: "text",
+      text: function(feature) {
+        return `<div class="embed-container" style="height:400px;"> <iframe name="survey123webform" title="DiscoverLocal" src="https://survey123.arcgis.com/share/9879cb02e0fc462ebd7d5f464ca41a0d" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe></div>`;
+      }
+    }
+  ]
+};
         
 
         const layer = new FeatureLayer({
