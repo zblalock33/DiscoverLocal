@@ -163,13 +163,16 @@
       ]
     },
     {
-        type: "text",
-        text: `<button id="openSurveyButton" style="padding: 8px; margin-top: 10px; cursor: pointer;">Review</button>
-            <div id="surveyPlaceholder" style="display:none;">
-            <div class="embed-container">
-                <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="Reviewer" src="//survey123.arcgis.com/share/9879cb02e0fc462ebd7d5f464ca41a0d" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
-            </div>
-            </div>`    }
+      type: "text",
+      text: `<button id="openSurveyButton" style="padding: 8px; margin-top: 10px; cursor: pointer;">Review</button>
+             <div id="surveyPlaceholder" style="display:none;">
+             <div class="embed-container">
+                 <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="Reviewer" src="//survey123.arcgis.com/share/9879cb02e0fc462ebd7d5f464ca41a0d" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
+             </div>
+             </div>
+             <!-- New clickable text element -->
+             <div id="additionalText" style="cursor: pointer; margin-top: 10px;">Click me too!</div>`
+    }
   ]
 };
 
@@ -304,16 +307,15 @@
 
     view.popup.watch("visible", function(visible) {
   if (visible) {
-    // Ensure the popup content is fully loaded
-    var reviewButton = document.getElementById("openSurveyButton");
-    if (reviewButton) {
-      // Attach click event listener directly to the "Review" button
-      reviewButton.addEventListener('click', function() {
+    // Attach click event listener to the popup container
+    view.popup.container.addEventListener('click', function(event) {
+      // Check if the clicked element is the "Review" button
+      if (event.target.id === "openSurveyButton") {
         var surveyPlaceholder = document.getElementById("surveyPlaceholder");
         // Toggle the display of the survey iframe
         surveyPlaceholder.style.display = surveyPlaceholder.style.display === "none" ? "block" : "none";
-      });
-    }
+      }
+    });
   }
 });
   </script>
