@@ -14,9 +14,9 @@
     }
     #actionSelect {
       position: fixed;
-      z-index: 10;
+      z-index: 30;
       top: 10px;
-      right: 10px;
+      left: 10px;
       background-color: #8B0000; /* Dark Red */
       color: whitesmoke; /* Black text color */
       padding: 8px;
@@ -49,7 +49,7 @@
       margin: 0;
       padding: 0;
       position: absolute;
-      z-index: 11;
+      z-index: 21;
       background-color: #8B0000; /* Dark Red */
       color: whitesmoke; /* Black text color */
       width: calc(100% - 16px);
@@ -78,6 +78,13 @@
       width: 100%;
       height: 100%;
     }
+    .esri-search {
+  background-color: #8B0000; /* Dark Red */
+  color: whitesmoke; /* White text color */
+  border: 1px solid #000; /* Black border */
+  border-radius: 4px;
+  z-index: 11; /* Ensure it's above other elements */
+}
   </style>
 </head>
 <body>
@@ -91,7 +98,7 @@
     <div id="searchWidgetDiv"></div>
     <div id="venueSearchDiv">
   <input type="text" id="venueNameInput" placeholder="Venue Name" />
-  <div id="suggestionBox" class="suggestion-box"></div>
+  <div id="suggestionBox" class="suggestions"></div>
   <select id="venueTypeInput">
     <option value="">Select Venue Type</option>
     <option value="Bar">Bar</option>
@@ -185,7 +192,7 @@
           if (input.length > 2) {
             suggestVenues(input);
           } else {
-            document.getElementById('suggestions').innerHTML = ''; // Clear suggestions if input is too short
+            document.getElementById('suggestionBox').innerHTML = ''; // Corrected ID
           }
         });
 
@@ -194,7 +201,7 @@
 
           // Display suggestions
           function displaySuggestions(features) {
-            var suggestionsList = document.getElementById('suggestions');
+            var suggestionsList = document.getElementById('suggestionBox'); // Corrected ID
             suggestionsList.innerHTML = ''; // Clear previous suggestions
             features.forEach(function(feature) {
               var li = document.createElement('li');
