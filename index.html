@@ -12,7 +12,6 @@
       height: 100%;
       width: 100%;
     }
-    /* Add your custom styles here */
     .custom-popup {
       background-color: #333; /* Dark background for contrast */
       color: #fff; /* White text */
@@ -38,6 +37,20 @@
     }
     .custom-button:hover {
       background-color: #0056b3; /* Darken on hover */
+    }
+    .esri-popup {
+      border: none !important; /* Removes the border */
+      box-shadow: none !important; /* Removes the shadow */
+      background-color: #333 !important; /* Dark background for contrast */
+      color: #fff !important; /* White text */
+      border-radius: 5px !important; /* Rounded corners */
+    }
+    .esri-popup .esri-popup__main-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
     }
     
     #actionSelect {
@@ -186,11 +199,11 @@
         });
 
         const popupTemplate = {
-          title: "{venue_name}",
+          title: "", // Remove the title here as it will be included in the content
           content: `<div class="custom-popup">
-                      <h1>{venue_name}</h1>
-                      <p>Type: {venue_type}</p>
-                      <p>Location: {add_venue_location}</p>
+                      <h1>{name}</h1>
+                      <p>Type: {type}</p>
+                      <p>Location: {address}</p>
                       <button id="openSurveyButton" class="custom-button">Review</button>
                     </div>`
         };
