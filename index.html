@@ -85,6 +85,22 @@
       border-radius: 4px;
       z-index: 11; /* Ensure it's above other elements */
     }
+    .esri-popup {
+  background-color: #8B0000; /* Dark Red */
+  color: black; /* Black text color */
+  width: 300px; /* Fixed width */
+  height: 300px; /* Fixed height */
+  margin-left: -150px; /* Centers the popup */
+  margin-top: -150px; /* Centers the popup */
+}
+
+.esri-popup .esri-popup__main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
   </style>
 </head>
 <body>
@@ -164,14 +180,9 @@
     },
     {
       type: "text",
-      text: `<button id="openSurveyButton" style="padding: 8px; margin-top: 10px; cursor: pointer;">Review</button>
-             <div id="surveyPlaceholder" style="display:none;">
-             <div class="embed-container">
-                 <iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="Reviewer" src="//survey123.arcgis.com/share/9879cb02e0fc462ebd7d5f464ca41a0d" allow="geolocation https://survey123.arcgis.com; camera https://survey123.arcgis.com"></iframe>
-             </div>
-             </div>
-             <!-- New clickable text element -->
-             <div id="additionalText" style="cursor: pointer; margin-top: 10px;">Click me too!</div>`
+      text: `<div id="customPopupContent">
+               <button id="openSurveyButton" style="padding: 8px; margin-top: 10px; cursor: pointer;">Review</button>
+             </div>`
     }
   ]
 };
