@@ -84,7 +84,7 @@
       "esri/widgets/Search",
       "esri/layers/FeatureLayer",
       "esri/Graphic"
-    ], function(esriConfig, Map, MapView, Search, FeatureLayer, Graphic) {
+    ], function(esriConfig, Map, MapView, Search, FeatureLayer,Graphic) {
 
         esriConfig.apiKey = "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU";
 
@@ -100,10 +100,6 @@
               ui: {
                 components: ["attribution"]
               }
-        });
-
-        const locateBtn= new Locate({
-            view : view
         });
 
           // Define and initialize the Search widget
@@ -126,7 +122,6 @@
                   fieldName: "venue_type",
                   label: "Venue Type"
                 },
-            
                 {
                   fieldName: "add_venue_location",
                   label: "Venue Location"
@@ -194,7 +189,7 @@
           performVenueSearch(venueName, venueType);
         });
 
-    function performVenueSearch(venueName, venueType) {
+        function performVenueSearch(venueName, venueType) {
   var query = layer.createQuery();
   var whereClause = [];
 
@@ -248,7 +243,6 @@
     console.error("Search failed: ", error);
   });
 }
-
 
     });
   </script>
