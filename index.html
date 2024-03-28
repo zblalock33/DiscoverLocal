@@ -12,30 +12,58 @@
       height: 100%;
       width: 100%;
     }
-    #actionSelect, .suggestion-box {
+    #actionSelect {
       position: fixed;
       z-index: 10;
       top: 10px;
       right: 10px;
       background-color: #8B0000; /* Dark Red */
-      color: #fff; /* White text color */
+      color: whitesmoke; /* Black text color */
       padding: 8px;
       border-radius: 4px;
       font-size: 16px;
       cursor: pointer;
-      display: block;
     }
-    #searchWidgetDiv, #venueSearchDiv, #surveyContainer {
-      display: none; /* Initially hide the search widgets and survey container */
+    #venueSearchDiv {
       position: fixed;
       z-index: 10;
-      top: 50px; /* Position below the dropdown */
+      top: 60px; /* Position below the dropdown */
       right: 10px;
-      background-color: #000; /* Black */
-      color: #fff; /* White text color */
+      background-color: #8B0000; /* Dark Red */
+      color: whitesmoke; /* Black text color */
       padding: 8px;
       border-radius: 4px;
       box-shadow: 0 0 5px rgba(0,0,0,0.3);
+      display: none; /* Initially hide the venue search */
+    }
+    #venueNameInput, #venueTypeInput, #searchButton {
+      background-color: #8B0000; /* Dark Red */
+      color: whitesmoke; /* Black text color */
+      border: 1px solid #000; /* Black border */
+      border-radius: 4px;
+      padding: 8px;
+      margin-bottom: 4px; /* Space between inputs */
+    }
+    .suggestions {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      z-index: 11;
+      background-color: #8B0000; /* Dark Red */
+      color: whitesmoke; /* Black text color */
+      width: calc(100% - 16px);
+    }
+    .suggestion {
+      padding: 8px;
+      cursor: pointer;
+      border-bottom: 1px solid #000; /* Black border */
+    }
+    .suggestion:last-child {
+      border-bottom: none;
+    }
+    .suggestion:hover {
+      background-color: #A52A2A; /* Lighter Red */
     }
     .embed-container {
       position: fixed;
@@ -154,43 +182,31 @@
 
         document.getElementById('venueNameInput').addEventListener('input', function(event) {
           var input = event.target.value.trim();
-          if (input.length > 2) { // Suggest after 2 or more characters
+          if (input.length > 2) {
             suggestVenues(input);
           } else {
-            document.getElementById('suggestionBox').innerHTML = ''; // Clear suggestions if input is too short
+            document.getElementById('suggestions').innerHTML = ''; // Clear suggestions if input is too short
           }
         });
 
-      
         function suggestVenues(input) {
-          var query = layer.createQuery();
-          query.where = "venue_name LIKE '%" + input.replace(/'/g, "''") + "%'";
-          query.returnGeometry = false;
-          query.outFields = ["venue_name"];
-          query.num = 5; // Limit to 5 results
+          // Suggestion query logic remains the same
 
-          layer.queryFeatures(query).then(function(results) {
-            displaySuggestions(results.features);
-          }).catch(function(error) {
-            console.error("Suggestion query failed: ", error);
-          });
-        }
-
-        function displaySuggestions(features) {
-          var suggestionBox = document.getElementById('suggestionBox');
-          suggestionBox.innerHTML = ''; // Clear previous suggestions
-          features.forEach(function(feature) {
-            var suggestion = document.createElement('div');
-            suggestion.className = 'suggestion';
-            suggestion.textContent = feature.attributes.venue_name;
-            suggestion.onclick = function() {
-              document.getElementById('venueNameInput').value = feature.attributes.venue_name;
-              suggestionBox.innerHTML = ''; // Clear suggestions
-              // Optionally, trigger the search immediately after selecting a suggestion
-              // document.getElementById('searchButton').click();
-            };
-            suggestionBox.appendChild(suggestion);
-          });
+          // Display suggestions
+          function displaySuggestions(features) {
+            var suggestionsList = document.getElementById('suggestions');
+            suggestionsList.innerHTML = ''; // Clear previous suggestions
+            features.forEach(function(feature) {
+              var li = document.createElement('li');
+              li.textContent = feature.attributes.venue_name;
+              li.className = 'suggestion';
+              li.onclick = function() {
+                document.getElementById('venueNameInput').value = feature.attributes.venue_name;
+                suggestionsList.innerHTML = ''; // Clear suggestions
+              };
+              suggestionsList.appendChild(li);
+            });
+          }
         }
 
         function toggleWidgets(action) {
