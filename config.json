@@ -6,6 +6,6 @@
 
 "SURVEYID" : "survey123.arcgis.com/share/16f8e266ef6b421fb8c2537c5941b2f9" ,
 
-"Feature Layer" : "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer,
+"Feature Layer" : "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_16f8e266ef6b421fb8c2537c5941b2f9_results/FeatureServer"
 
 }

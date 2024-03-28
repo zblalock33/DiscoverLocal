@@ -82,8 +82,9 @@
       "esri/Map", 
       "esri/views/MapView", 
       "esri/widgets/Search",
-      "esri/layers/FeatureLayer"
-    ], function(esriConfig, Map, MapView, Search, FeatureLayer) {
+      "esri/layers/FeatureLayer",
+      "esri/Graphic"
+    ], function(esriConfig, Map, MapView, Search, FeatureLayer, Graphic) {
 
         esriConfig.apiKey = "AAPK612e73527e6c46738fb31fd7d030b6b1WYykMd_XA3IY3DfR4HA2lXy14UdWbOijIJYcfPMb9CqP7B_gvsbt_yy67N61TfuU";
 
@@ -99,6 +100,10 @@
               ui: {
                 components: ["attribution"]
               }
+        });
+
+        const locateBtn= new Locate({
+            view : view
         });
 
           // Define and initialize the Search widget
@@ -121,10 +126,7 @@
                   fieldName: "venue_type",
                   label: "Venue Type"
                 },
-                {
-                  fieldName: "untitled_question_9_other",
-                  label: "Other Venue Type"
-                },
+            
                 {
                   fieldName: "add_venue_location",
                   label: "Venue Location"
@@ -192,8 +194,8 @@
           performVenueSearch(venueName, venueType);
         });
 
-        function performVenueSearch(venueName, venueType) {
-            var query = layer.createQuery();
+    function performVenueSearch(venueName, venueType) {
+  var query = layer.createQuery();
   var whereClause = [];
 
   if (venueName) {
@@ -209,11 +211,35 @@
 
   layer.queryFeatures(query).then(function(results) {
     if (results.features.length > 0) {
-      // Display the results on the map
+      // Define a symbol for displaying the found features as markers
+      var markerSymbol = {
+        type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+        color: [226, 119, 40], // Orange
+        outline: {
+          color: [255, 255, 255], // White
+          width: 2
+        }
+      };
+
+      // Remove any existing graphics (if necessary)
+      view.graphics.removeAll();
+
+      // Loop through each feature returned from the query
+      results.features.forEach(function(feature) {
+        // Create a graphic for each feature using the symbol defined above
+        var graphic = new esri.Graphic({
+          geometry: feature.geometry,
+          symbol: markerSymbol
+        });
+
+        // Add the graphic to the map view
+        view.graphics.add(graphic);
+      });
+
+      // Zoom the map to the bounds of the returned features
       view.goTo(results.features.map(function(feature) {
         return feature.geometry;
       }));
-      // Optionally, display the results in a list or table
     } else {
       console.log("No results found.");
       // Inform the user that no results were found
@@ -222,6 +248,7 @@
     console.error("Search failed: ", error);
   });
 }
+
 
     });
   </script>
