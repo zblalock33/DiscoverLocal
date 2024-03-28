@@ -137,28 +137,10 @@
               }
         });
 
-        // Initialize the Search widget
         var locationSearchWidget = new Search({
-          view: view,
-          container: document.createElement("div") // Create a new container for the widget
+          view: view ,
+          container: "searchWidgetDiv"
         });
-
-        // Function to toggle widgets based on the selected action
-        function toggleWidgets(action) {
-          // Hide or show the location search widget based on the selected action
-          if (action === 'searchLocation') {
-            view.ui.add(locationSearchWidget, "top-right"); // Add the search widget to the view
-          } else {
-            view.ui.remove(locationSearchWidget); // Remove the search widget if another action is selected
-          }
-          // Additional logic for handling other actions remains unchanged
-        }
-
-        // Event listener for the action select dropdown
-        document.getElementById('actionSelect').addEventListener('change', function(event) {
-          toggleWidgets(event.target.value);
-        });
-
 
         const popupTemplate = {
           title: "{venue_name}",
